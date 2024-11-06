@@ -1,0 +1,171 @@
+.sidebar {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  border-right: 1px solid gray;
+  padding-top: 30px;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.side-elem {
+  width: 100%;
+  padding-top:8px;
+  padding-bottom: 8px;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.side-elem:hover {
+  background-color: rgba(211, 211, 211, 0.452);
+}
+
+.line {
+  background-color:gray;
+  opacity: 0.5;
+  height:1.5px;
+  width:100%;
+  border-radius: 4px;
+}
+
+#addProj {
+  width: 80%;
+  padding-top:8px;
+  padding-bottom: 8px;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  bottom:30px;
+  position: absolute;
+}
+
+#addProj:hover {
+  background-color: rgba(211, 211, 211, 0.452);
+}
+
+.create-task {
+  height: 40%;
+  width: 60%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position:absolute;
+  margin: auto;
+  display: none;
+  transition: display 0.6s;
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  z-index: 2;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.blur {
+  width:100%;
+  height:100%;
+  filter:blur(5px);
+  transition: filter 0.3s ease;
+  position: absolute;
+  z-index: -1;
+}
+
+.close {
+  margin:auto;
+  right:20px;
+  top:5px;
+  text-align: right;
+  position:absolute;
+  cursor: pointer;
+  height:30px;
+  width:50px;
+  font-size:30px;
+}
+
+.banner {
+  width: 100%;
+  border-bottom: 1px solid black;
+  height:10%;
+  margin-bottom: 10px;
+}
+
+.create {
+  background-color: white;
+  border-radius: 3px;
+  font-size: 20px;
+  margin-top: 20px;
+  transition: background-color 0.4s;
+}
+
+.create:hover {
+  background-color: rgb(8, 183, 241);
+  color: white;
+
+}
+
+.side {
+  display: inline-block;
+  margin-bottom: 10px;
+  border-right: 1px solid black;
+  padding-right: 5px;
+  margin-right: 5px;
+  height: 79%;
+}
+
+.createForm {
+  display: inline-block;
+}
+
+.prio {
+  background-color: white;
+  border-radius: 3px;
+  font-size: 15px;
+  margin: 10px;
+  transition: background-color 0.4s;
+}
+
+.prio:hover {
+  background-color: black;
+  color:white;
+}
+
+.projPage {
+  display:inline-block;
+  margin-left: 30%;
+  width: 70%;
+}
+
+.task-stuff {
+  display: inline-block;
+  
+}
+
+.right-task {
+  float: right;
+  display: inline-block;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  width: 90%;
+  padding-top:10px; 
+  padding-bottom:10px;
+  border-bottom:1px solid black
+}
+
+.header {
+  
+  border-bottom:1px solid black !important;
+  margin-top:5% !important;
+  width: 90% !important;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+}
+
+.strike {
+  text-decoration: line-through;
+}
