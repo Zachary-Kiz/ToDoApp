@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import plus from './assets/plus.svg';
 import trash from './assets/trash-svgrepo-com.svg'
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ToDoPage() {
 
@@ -94,9 +94,11 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
   }
 
 
-  function getProj(projName, num) {
+  function getProj(projName, num, check) {
+    
     setCurrentProj(projName);
     setIsClicked(num);
+    console.log('cehc');
     setCurrentTasks([]);
     console.log(tasks);
     let curTasks = [];
@@ -157,22 +159,24 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
 
   return (
     <div className='sidebar'>
-      <SideElem value="Home" getProj={getProj} index={0} isClicked={isClicked}/>
-      <SideElem value="Today" getProj={getProj} index={1} isClicked={isClicked}/>
-      <SideElem value="Week" getProj={getProj} index={2} isClicked={isClicked}/>
+      <SideElem value="Home" getProj={getProj} index={0} isClicked={isClicked} tasks={tasks}/>
+      <SideElem value="Today" getProj={getProj} index={1} isClicked={isClicked} tasks={tasks}/>
+      <SideElem value="Week" getProj={getProj} index={2} isClicked={isClicked} tasks={tasks}/>
       <div className='line'></div><br />
       <div style={{"marginBottom":"10px"}}>Projects</div>
       {projects.map((project, index) => (
-        <SideElem key={index} value={project.name} index={index + 3} getProj={getProj} isClicked={isClicked}/>
+        <SideElem key={index} value={project.name} index={index + 3} getProj={getProj} isClicked={isClicked} tasks={tasks}/>
       ))}
       <AddList onClick={onAddProj} /> {/* Pass onClick prop */}
     </div>
   );
 }
 
-function SideElem({ value , getProj, index, isClicked}) {
+function SideElem({ value , getProj, index, isClicked, tasks}) {
+  useEffect(() => {if (isClicked == index ) {getProj(value,index, false )}}, [tasks.length])
+  
   return (
-    <div style={{backgroundColor: isClicked === index ? 'gray':''}} className='side-elem' onClick={() => getProj(value, index)}>
+    <div style={{backgroundColor: isClicked === index ? '#D8D8D8':''}} className='side-elem' onClick={() => getProj(value, index, true)}>
       <div style={{ marginLeft: '10px' }}>{value}</div>
     </div>
   );
@@ -195,6 +199,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
   const proj = document.getElementById('proj');
   const task = document.getElementById('task');
   const [selButton, setSelButton] = useState(null);
+  const [isClicked, setIsClicked] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -256,11 +261,13 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
   function showProj() {
     proj.style['display'] = '';
     task.style['display'] = 'none';
+    setIsClicked(1);
   }
 
   function showTask() {
     proj.style['display'] = 'none';
     task.style['display'] = '';
+    setIsClicked(2);
   }
 
   function returnHome() {
@@ -276,8 +283,8 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       </div>
       <div style={{"display":"flex", "height":"100%"}}>
       <div className='side'>
-          <div className='side-elem' onClick={showProj}>Create Project</div>
-          <div className='side-elem' onClick={showTask}>Create Task</div>
+          <div className='side-elem' style={{paddingLeft:'5px', backgroundColor: isClicked === 1 ? '#D8D8D8':''}} onClick={showProj}>Create Project</div>
+          <div className='side-elem' style={{paddingLeft:'5px', backgroundColor: isClicked === 2 ? '#D8D8D8':''}}  onClick={showTask}>Create Task</div>
         </div>
 
       <div id="proj" >

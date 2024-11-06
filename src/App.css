@@ -84,6 +84,10 @@
   font-size:30px;
 }
 
+.close:active {
+  margin-top: 3px;
+}
+
 .banner {
   width: 100%;
   border-bottom: 1px solid black;
@@ -109,9 +113,10 @@
   display: inline-block;
   margin-bottom: 10px;
   border-right: 1px solid black;
-  padding-right: 5px;
+  padding-right: 20px;
   margin-right: 5px;
   height: 79%;
+  width:10%
 }
 
 .createForm {
