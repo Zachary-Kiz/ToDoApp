@@ -83,7 +83,7 @@ function Task({ task,num, setTasks }) {
 
 function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}) {
   
-  const [isClicked, setIsClicked] = useState(null);
+  const [isClicked, setIsClicked] = useState("Home");
 
   function onAddProj() {
     setIsBlurred(true);
@@ -98,9 +98,7 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
     
     setCurrentProj(projName);
     setIsClicked(num);
-    console.log('cehc');
     setCurrentTasks([]);
-    console.log(tasks);
     let curTasks = [];
     if (projName == "Home") {
       curTasks = tasks;
@@ -233,13 +231,25 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       setFormData({ projName: '', projDescription: '' });
       
       create.style['display'] = 'none';
+      document.getElementById("titleError").style['display'] = 'none';
       e.target.reset();
+    } else {
+      document.getElementById("titleError").style['display'] = 'block';
     }
   }
 
   function addTask(e) {
     e.preventDefault();
-    if (formTask.taskName !== "") {
+    if (formTask.taskName === "") {
+      document.getElementById("taskTitleError").style['display'] = 'block';
+    }
+    if (formTask.taskPrio === "") {
+      document.getElementById("taskPrioError").style['display'] = 'block';
+    }
+    if (formTask.taskDue === "") {
+      document.getElementById("taskDateError").style['display'] = 'block';
+    }
+    if (formTask.taskName !== "" && formTask.taskPrio !== "" && formTask.taskDue !== "") {
       const taskEntry = {
         id: tasks.length,
         name: formTask.taskName,
@@ -253,9 +263,12 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       setFormTask({taskId:'', taskName: '', taskDesc: '', taskProj:'', taskPrio: '', taskDue:''});
 
       create.style['display'] = 'none';
+      document.getElementById("taskTitleError").style['display'] = 'none';
+      document.getElementById("taskPrioError").style['display'] = 'none';
+      document.getElementById("taskDateError").style['display'] = 'none';
       console.log(formTask)
       e.target.reset();
-    }
+    } 
   }
 
   function showProj() {
@@ -290,8 +303,9 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       <div id="proj" >
         <form className='createForm' onSubmit={addProj}>
         <label>Enter Project Name:</label><br></br>
-        <input id="projName" value={formData.projName} onChange={handleChange} name="projName" required></input><br></br>
-        <label>Project Description</label><br></br>
+        <input id="projName" value={formData.projName} onChange={handleChange} name="projName"></input><br></br>
+        <div id="titleError" className='error'>*please enter a project name</div>
+        <label style={{marginTop:'10px'}}>Project Description</label><br></br>
         <input  name="projDescription"
             value={formData.projDescription}
             onChange={handleChange}></input><br></br>
@@ -301,7 +315,8 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       <div id="task" style={{"display": "none"}}>
       <form  className='createForm' onSubmit={addTask}>
         <label>Enter Task Name:</label><br></br>
-        <input id="taskName" name="taskName" required onChange={handleChangeTask}></input><br></br>
+        <input id="taskName" name="taskName"  onChange={handleChangeTask}></input><br></br>
+        <div id="taskTitleError" className='error'>*please enter a task name</div>
         <label>Enter Description:</label><br></br>
         <textarea name='taskDesc' onChange={handleChangeTask}></textarea> <br></br>
         <label for="chooseProj">Choose Project:</label><br></br>
@@ -315,8 +330,10 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         <button id='low' style={{backgroundColor: selButton == 'low' ? 'black':'', color:  selButton == 'low' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"Low"}>Low</button>
         <button id='med' style={{backgroundColor: selButton == 'med' ? 'black':'', color:  selButton == 'med' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"Medium"}>Medium</button>
         <button id='high' style={{backgroundColor: selButton == 'high' ? 'black':'', color:  selButton == 'high' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"High"}>High</button><br></br>
+        <div id="taskPrioError" className='error'>*please choose a priority</div>
         <label>Enter Due Date:</label><br></br>
-        <input required name="taskDue" type="date" onChange={handleChangeTask}></input><br></br>
+        <input  name="taskDue" type="date" onChange={handleChangeTask}></input><br></br>
+        <div id="taskDateError" className='error'>*please choose a date</div>
         <input className='create' type="submit" value="Create"></input>
 
       </form>

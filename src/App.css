@@ -46,7 +46,7 @@
 }
 
 .create-task {
-  height: 40%;
+  height: 50%;
   width: 60%;
   top: 0;
   right: 0;
@@ -114,7 +114,7 @@
   margin-bottom: 10px;
   border-right: 1px solid black;
   padding-right: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
   height: 79%;
   width:10%
 }
@@ -174,3 +174,17 @@
 .strike {
   text-decoration: line-through;
 }
+
+.error {
+  font-size: 11px;
+  color: red;
+  margin-left: 3px;
+  display: none;
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+label {
+  display: inline-block;
+  margin-top: 10px;
+  }
