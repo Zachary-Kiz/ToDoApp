@@ -15,6 +15,7 @@
   transition: background-color 0.3s;
   border-radius: 8px;
   margin-bottom: 10px;
+  padding-right: 8px;
 }
 
 .side-elem:hover {
@@ -46,8 +47,10 @@
 }
 
 .create-task {
-  height: 50%;
-  width: 60%;
+  height: 60%;
+  width: 40%;
+  min-width: 600px;
+  min-height: 600px;
   top: 0;
   right: 0;
   bottom: 0;
@@ -96,17 +99,31 @@
 }
 
 .create {
-  background-color: white;
+  background-color: rgb(9, 38, 187);
+  color: white;
   border-radius: 3px;
-  font-size: 20px;
   margin-top: 20px;
-  transition: background-color 0.4s;
+  border: 0px;
+  padding: 10px 20px;
+  font-size: 18px;
+  transition: background-color 0.4s, transform 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .create:hover {
-  background-color: rgb(8, 183, 241);
+  background-color: #2545d7;
   color: white;
+}
 
+.createText {
+  display: inline-block;  /* Ensure the text is treated as an inline block */
+  transition: transform 0.3s ease;
+}
+
+.create:hover .createText {
+  transform: scale(1.1);  /* Scale the text when hovering over the button */
 }
 
 .side {
@@ -116,11 +133,12 @@
   padding-right: 20px;
   margin-right: 10px;
   height: 79%;
-  width:10%
+  width:15%
 }
 
 .createForm {
   display: inline-block;
+  margin-left: 10px;
 }
 
 .prio {
@@ -159,8 +177,16 @@
   width: 90%;
   padding-top:10px; 
   padding-bottom:10px;
-  border-bottom:1px solid black
+  margin-top: 10px;
+  border-radius: 20px;
+  background-color: #eee;
+  transition: all .2s ease-out;
 }
+
+.task:hover {
+  box-shadow: 3px 3px 5px 2px rgba(0, 0, 0, 0.2);
+}
+
 
 .header {
   
@@ -187,4 +213,27 @@
 label {
   display: inline-block;
   margin-top: 10px;
+  }
+
+  input[type='text'] {
+    padding:5px;
+    width: 207px;
+  }
+
+  textarea {
+    resize: none;
+    width: 215px;
+    height:50px;
+    font-family: 'Roboto' !important;
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  img:hover {
+    fill:#2545d7
+  }
+
+  .prioLevel {
+    margin-right: 7px;
+    color:rgb(86, 86, 219);
   }

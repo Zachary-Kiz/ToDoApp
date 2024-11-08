@@ -59,23 +59,31 @@ function Task({ task,num, setTasks }) {
 
   //num = num.toString();
   let id = 'taskText' + num;
+  let priorityLabel = '!'; // Default to Low
+
+  // Check priority and assign the correct label
+  if (task.priority === 'High') {
+    priorityLabel = '!!!';
+  } else if (task.priority === 'Medium') {
+    priorityLabel = '!!';
+  }
 
   return (
     <div id={"task" + task.id}  className='task'>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <input className='task-stuff' type='checkbox' onClick={() => addStrike(id)}/>
+        <input className='task-stuff' style={{accentColor:'rgb(9, 38, 187);', marginLeft:'10px'}} type='checkbox' onClick={() => addStrike(id)}/>
         <div id={id} className='task-stuff' style={{
           marginLeft: '10px',
           flexGrow: 1, // This ensures task name takes up remaining space
           overflow: 'hidden', // Prevents overflow if task name is too long
           textOverflow: 'ellipsis', // Adds ellipsis when the text overflows
           whiteSpace: 'nowrap', // Prevents wrapping of task name
-        }}>{task.name}</div>
+        }}><div className='task-stuff prioLevel'>{priorityLabel}</div>{task.name}</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <button className='task-stuff prio'>Details</button>
         <div className='task-stuff' style={{ marginLeft: '10px', 'marginRight': '30px' }}>{task.dueDate}</div>
-        <img className='task-stuff' onClick={() => deleteTask()} src={trash} alt='trash' style={{'width':'3%', 'marginRight':'1%'}}></img>
+        <img className='task-stuff' onClick={() => deleteTask()} src={trash} alt='trash' style={{'width':'3%', 'marginRight':'2%'}}></img>
       </div>
     </div>
   );
@@ -83,7 +91,7 @@ function Task({ task,num, setTasks }) {
 
 function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}) {
   
-  const [isClicked, setIsClicked] = useState("Home");
+  const [isClicked, setIsClicked] = useState(0);
 
   function onAddProj() {
     setIsBlurred(true);
@@ -261,6 +269,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       setTasks((prevTasks) => [...prevTasks, taskEntry])
       setIsBlurred(false);
       setFormTask({taskId:'', taskName: '', taskDesc: '', taskProj:'', taskPrio: '', taskDue:''});
+      setSelButton(null);
 
       create.style['display'] = 'none';
       document.getElementById("taskTitleError").style['display'] = 'none';
@@ -302,23 +311,23 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
 
       <div id="proj" >
         <form className='createForm' onSubmit={addProj}>
-        <label>Enter Project Name:</label><br></br>
-        <input id="projName" value={formData.projName} onChange={handleChange} name="projName"></input><br></br>
+        <label>Project Name*</label><br></br>
+        <input type='text' id="projName" value={formData.projName} onChange={handleChange} name="projName" placeholder='Enter Project Name'></input><br></br>
         <div id="titleError" className='error'>*please enter a project name</div>
         <label style={{marginTop:'10px'}}>Project Description</label><br></br>
-        <input  name="projDescription"
+        <input type='text'  name="projDescription"
             value={formData.projDescription}
             onChange={handleChange}></input><br></br>
-        <input className='create' type="submit" value="Create"></input>
+        <button className='create' type="submit" value="Create"><span className='createText'>Create</span></button>
         </form>
       </div>
       <div id="task" style={{"display": "none"}}>
       <form  className='createForm' onSubmit={addTask}>
-        <label>Enter Task Name:</label><br></br>
-        <input id="taskName" name="taskName"  onChange={handleChangeTask}></input><br></br>
+        <label>Task Name*</label><br></br>
+        <input type='text' id="taskName" name="taskName"  onChange={handleChangeTask} placeholder='Enter Task Name'></input><br></br>
         <div id="taskTitleError" className='error'>*please enter a task name</div>
-        <label>Enter Description:</label><br></br>
-        <textarea name='taskDesc' onChange={handleChangeTask}></textarea> <br></br>
+        <label>Description:</label><br></br>
+        <textarea name='taskDesc' onChange={handleChangeTask} placeholder='Enter Description'></textarea> <br></br>
         <label for="chooseProj">Choose Project:</label><br></br>
         <select name="taskProj" id="chooseProj" onChange={handleChangeTask}>
           <option value={"None"} >None</option>
@@ -326,15 +335,15 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         <option key={index} value={project.name}>{project.name}</option>
           ))}
         </select><br></br>
-        <label>Select Priority:</label> <br></br>
+        <label>Select Priority*</label> <br></br>
         <button id='low' style={{backgroundColor: selButton == 'low' ? 'black':'', color:  selButton == 'low' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"Low"}>Low</button>
         <button id='med' style={{backgroundColor: selButton == 'med' ? 'black':'', color:  selButton == 'med' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"Medium"}>Medium</button>
         <button id='high' style={{backgroundColor: selButton == 'high' ? 'black':'', color:  selButton == 'high' ? 'white':''}} className='prio' name="taskPrio" onClick={handleChangeTask} value={"High"}>High</button><br></br>
         <div id="taskPrioError" className='error'>*please choose a priority</div>
-        <label>Enter Due Date:</label><br></br>
+        <label>Enter Due Date*</label><br></br>
         <input  name="taskDue" type="date" onChange={handleChangeTask}></input><br></br>
         <div id="taskDateError" className='error'>*please choose a date</div>
-        <input className='create' type="submit" value="Create"></input>
+        <button className='create' type="submit" value="Create"><span className='createText'>Create</span></button>
 
       </form>
       </div>
