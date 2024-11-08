@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/zachary-kiz/github.io/ToDoApp/static/css/main.1666793c.css",
-    "main.js": "/zachary-kiz/github.io/ToDoApp/static/js/main.9ff1722f.js",
-    "static/js/453.37753ddd.chunk.js": "/zachary-kiz/github.io/ToDoApp/static/js/453.37753ddd.chunk.js",
-    "static/media/logo.svg": "/zachary-kiz/github.io/ToDoApp/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "static/media/trash-svgrepo-com.svg": "/zachary-kiz/github.io/ToDoApp/static/media/trash-svgrepo-com.bad1461008e8b66738adee532cd2308f.svg",
-    "index.html": "/zachary-kiz/github.io/ToDoApp/index.html",
-    "static/media/plus.svg": "/zachary-kiz/github.io/ToDoApp/static/media/plus.0afdb5012113879b73e5107122d1c74d.svg",
-    "main.1666793c.css.map": "/zachary-kiz/github.io/ToDoApp/static/css/main.1666793c.css.map",
-    "main.9ff1722f.js.map": "/zachary-kiz/github.io/ToDoApp/static/js/main.9ff1722f.js.map",
-    "453.37753ddd.chunk.js.map": "/zachary-kiz/github.io/ToDoApp/static/js/453.37753ddd.chunk.js.map"
+    "main.css": "/github.io/ToDoApp/static/css/main.1666793c.css",
+    "main.js": "/github.io/ToDoApp/static/js/main.5e4b474f.js",
+    "static/js/453.37753ddd.chunk.js": "/github.io/ToDoApp/static/js/453.37753ddd.chunk.js",
+    "static/media/logo.svg": "/github.io/ToDoApp/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "static/media/trash-svgrepo-com.svg": "/github.io/ToDoApp/static/media/trash-svgrepo-com.bad1461008e8b66738adee532cd2308f.svg",
+    "index.html": "/github.io/ToDoApp/index.html",
+    "static/media/plus.svg": "/github.io/ToDoApp/static/media/plus.0afdb5012113879b73e5107122d1c74d.svg",
+    "main.1666793c.css.map": "/github.io/ToDoApp/static/css/main.1666793c.css.map",
+    "main.5e4b474f.js.map": "/github.io/ToDoApp/static/js/main.5e4b474f.js.map",
+    "453.37753ddd.chunk.js.map": "/github.io/ToDoApp/static/js/453.37753ddd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1666793c.css",
-    "static/js/main.9ff1722f.js"
+    "static/js/main.5e4b474f.js"
   ]
 }
