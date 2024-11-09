@@ -9,7 +9,7 @@
 }
 
 .side-elem {
-  width: 100%;
+  width: 90%;
   padding-top:8px;
   padding-bottom: 8px;
   transition: background-color 0.3s;
@@ -32,18 +32,21 @@
 
 #addProj {
   width: 80%;
-  padding-top:8px;
-  padding-bottom: 8px;
+  padding-top:12px;
+  padding-bottom: 12px;
   transition: background-color 0.3s;
   border-radius: 8px;
   margin-bottom: 10px;
   display: flex;
   bottom:30px;
   position: absolute;
+  background-color: #141414;
+  border-radius: 10px;
+  
 }
 
 #addProj:hover {
-  background-color: rgba(211, 211, 211, 0.452);
+  background-color: black;
 }
 
 .create-task {

@@ -7,10 +7,34 @@ import { useEffect, useState } from 'react';
 export default function ToDoPage() {
 
   const [isBlurred, setIsBlurred] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [tasks, setTasks] = useState([]);
+  const [projects, setProjects] = useState(() => {
+    const storedProj = window.localStorage.getItem('projects');
+    const initVal = storedProj ? JSON.parse(storedProj) : [];
+    return Array.isArray(initVal) ? initVal : [];
+  });
+  const [tasks, setTasks] = useState(() => {
+    try {
+      const storedTasks = window.localStorage.getItem("tasks");
+      const initialVal = storedTasks ? JSON.parse(storedTasks) : [];
+      return Array.isArray(initialVal) ? initialVal : [];
+    } catch (error) {
+      console.error("Error parsing stored tasks:", error);
+      return [];
+    }
+  });
   const [currentProj, setCurrentProj] = useState("Home");
   const [currentTasks, setCurrentTasks] = useState([])
+
+  
+
+
+  useEffect(() => {
+    window.localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks.length])
+
+  useEffect(() => {
+    window.localStorage.setItem('projects', JSON.stringify(projects))
+  }, [projects.length])
   
   function unBlur() {
     if (isBlurred) {
@@ -164,16 +188,51 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
   
 
   return (
-    <div className='sidebar'>
-      <SideElem value="Home" getProj={getProj} index={0} isClicked={isClicked} tasks={tasks}/>
-      <SideElem value="Today" getProj={getProj} index={1} isClicked={isClicked} tasks={tasks}/>
-      <SideElem value="Week" getProj={getProj} index={2} isClicked={isClicked} tasks={tasks}/>
-      <div className='line'></div><br />
-      <div style={{"marginBottom":"10px"}}>Projects</div>
-      {projects.map((project, index) => (
-        <SideElem key={index} value={project.name} index={index + 3} getProj={getProj} isClicked={isClicked} tasks={tasks}/>
-      ))}
-      <AddList onClick={onAddProj} /> {/* Pass onClick prop */}
+    <div className="sidebar" style={{ minHeight:'500px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      
+      {/* Static items like "Home", "Today", "Week" */}
+      <SideElem value="Home" getProj={getProj} index={0} isClicked={isClicked} tasks={tasks} />
+      <SideElem value="Today" getProj={getProj} index={1} isClicked={isClicked} tasks={tasks} />
+      <SideElem value="Week" getProj={getProj} index={2} isClicked={isClicked} tasks={tasks} />
+      
+      {/* Horizontal line divider */}
+      <div className="line" style={{ margin: '10px 0', borderBottom: '1px solid #ddd' }}></div>
+      
+      {/* Scrollable container for Projects */}
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        flex: 1, 
+        maxHeight: 'calc(82vh - 150px)',  // Adjust to leave space for the "Projects" label and the divider
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        paddingBottom: '10px'
+      }}>
+        
+        {/* "Projects" Title */}
+        <div style={{ marginBottom: '10px', fontWeight: 'bold', fontSize: '18px', color: '#333' }}>
+          Projects
+        </div>
+        
+        {/* Project List */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {projects.map((project, index) => (
+            <SideElem 
+              key={index} 
+              value={project.name} 
+              index={index + 3} 
+              getProj={getProj} 
+              isClicked={isClicked} 
+              tasks={tasks}
+            />
+          ))}
+        </div>
+  
+        {/* AddList Button */}
+        <AddList onClick={onAddProj} style={{ marginTop: '30px' }} />
+        
+      </div>
+      
     </div>
   );
 }
@@ -190,9 +249,11 @@ function SideElem({ value , getProj, index, isClicked, tasks}) {
 
 function AddList({ onClick }) { // Receive the onClick prop
   return (
-    <div id='addProj' onClick={onClick} style={{ cursor: 'pointer' }}>
-      <img src={plus} alt="plus" style={{ width: '10%', paddingRight: '20px', paddingLeft: '10px' }} />
-      <div>Add Project</div>
+    <div  >
+      
+      <button  style={{ cursor: 'pointer', alignItems:'center', justifyContent:'center', display:'block' }} id='addProj' onClick={onClick}>
+        <img src={plus} alt="plus" style={{ width: '10%', filter: 'invert(100%)'}} />
+        </button>
     </div>
   );
 }
