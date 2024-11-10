@@ -6,6 +6,7 @@
   padding-top: 30px;
   padding-left: 2%;
   padding-right: 2%;
+  min-width: 15%;
 }
 
 .side-elem {
@@ -67,6 +68,8 @@
   z-index: 2;
   padding-left: 20px;
   padding-right: 20px;
+  background-color: white;
+  z-index: 100;
 }
 
 .blur {
@@ -184,6 +187,7 @@
   border-radius: 20px;
   background-color: #eee;
   transition: all .2s ease-out;
+  min-width: 50vh;
 }
 
 .task:hover {
@@ -202,6 +206,7 @@
 
 .strike {
   text-decoration: line-through;
+  color:#8d8d8d;
 }
 
 .error {
@@ -221,6 +226,11 @@ label {
   input[type='text'] {
     padding:5px;
     width: 207px;
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: blue !important;
+    color: white;
   }
 
   textarea {

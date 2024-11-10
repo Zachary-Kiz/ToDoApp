@@ -70,9 +70,16 @@ function ProjPage({currentProj, tasks, setTasks}) {
 
 function Task({ task,num, setTasks }) {
 
+  const [completed, setCompleted] = useState(false);
+
   function addStrike(id) {
     let elem = document.getElementById(id);
     elem.classList.toggle('strike');
+    if (elem.classList.contains('strike')) {
+      setCompleted(true);
+    } else {
+      setCompleted(false);
+    }
   }
 
   function deleteTask(){
@@ -92,22 +99,34 @@ function Task({ task,num, setTasks }) {
     priorityLabel = '!!';
   }
 
+  let date = new Date();
+  let year = date.getFullYear()
+  year = year.toString();
+  let month = date.getMonth() + 1;
+  month = month.toString();
+  let day = date.getDate();
+  if (day < 10) {
+    day = "0" + day;
+  }
+  let today = year + "-" + month + "-" + day;
+
   return (
     <div id={"task" + task.id}  className='task'>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <input className='task-stuff' style={{accentColor:'rgb(9, 38, 187);', marginLeft:'10px'}} type='checkbox' onClick={() => addStrike(id)}/>
+      <div style={{ display: 'flex', alignItems: 'center', maxWidth:'calc(100% - 260px)' }}>
+        <input className='task-stuff' style={{accentColor:'rgb(9, 38, 187)', marginLeft:'10px'}} type='checkbox' onClick={() => addStrike(id)}/>
         <div id={id} className='task-stuff' style={{
           marginLeft: '10px',
           flexGrow: 1, // This ensures task name takes up remaining space
-          overflow: 'hidden', // Prevents overflow if task name is too long
+          overflowX: 'hidden', // Prevents overflow if task name is too long
           textOverflow: 'ellipsis', // Adds ellipsis when the text overflows
-          whiteSpace: 'nowrap', // Prevents wrapping of task name
+          whiteSpace: 'nowrap',
+           // Prevents wrapping of task name
         }}><div className='task-stuff prioLevel'>{priorityLabel}</div>{task.name}</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <button className='task-stuff prio'>Details</button>
-        <div className='task-stuff' style={{ marginLeft: '10px', 'marginRight': '30px' }}>{task.dueDate}</div>
-        <img className='task-stuff' onClick={() => deleteTask()} src={trash} alt='trash' style={{'width':'3%', 'marginRight':'2%'}}></img>
+        <div className='task-stuff' style={{ marginLeft: '10px', 'marginRight': '30px', color: today > task.dueDate && !completed ? 'red' : 'black'}}>{task.dueDate}</div>
+        <img className='task-stuff' onClick={() => deleteTask()} src={trash} alt='trash' style={{'width':'30px', height:'30px', 'marginRight':'20px'}}></img>
       </div>
     </div>
   );
@@ -145,9 +164,9 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
       if (day < 10) {
         day = "0" + day;
       }
+
       let today = year + "-" + month + "-" + day;
       for (let i = 0; i < tasks.length; i++) {
-        console.log(tasks[i].dueDate == today)
         if (tasks[i].dueDate == today) {
           curTasks.push(tasks[i]);
         }
