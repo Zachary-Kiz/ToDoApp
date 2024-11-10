@@ -41,6 +41,8 @@ export default function ToDoPage() {
       setIsBlurred(false);
       const create = document.querySelector('.create-task');
       create.style['display'] = 'none';
+      const details = document.getElementById('taskDetails');
+      details.style['display'] = 'none';
     }
   }
 
@@ -48,27 +50,29 @@ export default function ToDoPage() {
     <>
   <div id="body" className={isBlurred ? 'blur' : ''} onClick={unBlur}>
   <Sidebar tasks={tasks} setCurrentTasks={setCurrentTasks} setCurrentProj={setCurrentProj} setIsBlurred={setIsBlurred} projects={projects}/>
-  <ProjPage currentProj={currentProj} tasks={currentTasks} setTasks={setTasks}></ProjPage>
+  <ProjPage currentProj={currentProj} tasks={currentTasks} setTasks={setTasks} setIsBlurred={setIsBlurred}></ProjPage>
   </div>
+  <div id="popups">
   <CreateTask tasks={tasks} setTasks={setTasks} projects={projects} setProjects={setProjects} setIsBlurred={setIsBlurred} currentProj={currentProj}/>
-  
+  <ShowDetails setIsBlurred={setIsBlurred}/>
+  </div>
   </>
 );
 }
 
-function ProjPage({currentProj, tasks, setTasks}) {
+function ProjPage({currentProj, tasks, setTasks, setIsBlurred}) {
   
   return (
     <div className='projPage'>
       <h1 className='header'>{currentProj}</h1>
       {tasks.map((task, index) => (
-        <Task key={index} task={task} num={index} setTasks={setTasks}/>
+        <Task key={index} task={task} num={index} setTasks={setTasks} setIsBlurred={setIsBlurred}/>
       ))}
     </div>
   )
 }
 
-function Task({ task,num, setTasks }) {
+function Task({ task,num, setTasks, setIsBlurred }) {
 
   const [completed, setCompleted] = useState(false);
 
@@ -86,6 +90,17 @@ function Task({ task,num, setTasks }) {
     let taskId = task.id;
     document.getElementById('task' + taskId).style['display'] = 'none';
     setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  }
+
+  function showDetails() {
+    const details = document.getElementById('taskDetails');
+    details.style['display'] = 'block';
+    document.getElementById('taskNameDet').innerHTML = task.name;
+    document.getElementById('taskDescription').innerHTML = task.description || "None";
+    document.getElementById('taskProject').innerHTML = task.project || "None";
+    document.getElementById('taskPriority').innerHTML = task.priority;
+    document.getElementById('taskDueDate').innerHTML = task.dueDate;
+    setIsBlurred(true);
   }
 
   //num = num.toString();
@@ -110,7 +125,7 @@ function Task({ task,num, setTasks }) {
   }
   let today = year + "-" + month + "-" + day;
 
-  return (
+  return (<>
     <div id={"task" + task.id}  className='task'>
       <div style={{ display: 'flex', alignItems: 'center', maxWidth:'calc(100% - 260px)' }}>
         <input className='task-stuff' style={{accentColor:'rgb(9, 38, 187)', marginLeft:'10px'}} type='checkbox' onClick={() => addStrike(id)}/>
@@ -124,12 +139,40 @@ function Task({ task,num, setTasks }) {
         }}><div className='task-stuff prioLevel'>{priorityLabel}</div>{task.name}</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <button className='task-stuff prio'>Details</button>
+        <button className='task-stuff prio' onClick={() => showDetails()}>Details</button>
         <div className='task-stuff' style={{ marginLeft: '10px', 'marginRight': '30px', color: today > task.dueDate && !completed ? 'red' : 'black'}}>{task.dueDate}</div>
         <img className='task-stuff' onClick={() => deleteTask()} src={trash} alt='trash' style={{'width':'30px', height:'30px', 'marginRight':'20px'}}></img>
       </div>
     </div>
+    </>
   );
+}
+
+function ShowDetails({setIsBlurred}) {
+
+  const details = document.getElementById("taskDetails");
+  
+  function returnHome() {
+    details.style['display'] = 'none';
+    setIsBlurred(false);
+  }
+
+  return (
+    <div className='details' id="taskDetails">
+    <div className='banner'>
+        <h2>Details</h2>
+        <div className="close" onClick={() => returnHome()}>&#x2716;</div>
+      </div>
+      <div style={{display: 'inline-block'}}>
+        <div ><b>Task Name: </b><div id="taskNameDet" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+        <div ><b>Description: </b><div id="taskDescription" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+        <div ><b>Project: </b><div id="taskProject" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+        <div ><b>Priority: </b><div id="taskPriority" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+        
+        <div ><b>Due Date: </b><div id="taskDueDate" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+      </div>
+      </div>
+  )
 }
 
 function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}) {
@@ -247,7 +290,6 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
           ))}
         </div>
   
-        {/* AddList Button */}
         <AddList onClick={onAddProj} style={{ marginTop: '30px' }} />
         
       </div>
