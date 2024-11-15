@@ -82,6 +82,13 @@ function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setC
     setCurrentProj("Home");
   }
 
+  function sortDate() {
+    console.log(tasks);
+    let sortedTasks = tasks.sort((a, b) => Date.parse(new Date(b.dueDate)) - Date.parse(new Date(a.dueDate)));
+    //setTasks(sortedTasks);
+    console.log(sortedTasks);
+  }
+
   const dontChange = ["Home", "Today", "Week"];
   
   return (
@@ -91,7 +98,8 @@ function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setC
         <div id='dots'  className='dots' style={{display: !dontChange.includes(currentProj) ? 'inline-block' : 'none'}}></div>
       </div>
       <div id='dropdown' className='dropdown'>
-        <div onClick={delProj}>Delete Project</div>
+        <div className='dropdown-elem' onClick={delProj}>Delete Project</div>
+        <div className='dropdown-elem' onClick={sortDate}>Sort By Date</div>
       </div>
       {tasks.map((task, index) => (
         <Task key={index} task={task} num={index} setTasks={setTasks} setIsBlurred={setIsBlurred}/>
@@ -193,7 +201,7 @@ function ShowDetails({setIsBlurred}) {
       </div>
       <div style={{display: 'inline-block'}}>
         <div ><b>Task Name: </b><div id="taskNameDet" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
-        <div ><b>Description: </b><div id="taskDescription" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
+        <div style={{display:'inline-block'}}><b>Description: </b><div id="taskDescription" style={{display: 'inline-block', marginRight: '10px', minWidth:  '350px', maxWidth:'400px', wordWrap:'break-word'}}></div></div>
         <div ><b>Project: </b><div id="taskProject" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
         <div ><b>Priority: </b><div id="taskPriority" style={{display: 'inline-block', marginRight: '10px'}}></div></div>
         
@@ -333,7 +341,7 @@ function SideElem({ value , getProj, index, isClicked, tasks}) {
   
   return (
     <div style={{backgroundColor: isClicked === index ? '#D8D8D8':''}} className='side-elem' onClick={() => getProj(value, index, true)}>
-      <div style={{ marginLeft: '10px' }}>{value}</div>
+      <div className='side-text'>{value}</div>
     </div>
   );
 }
@@ -357,7 +365,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
   const proj = document.getElementById('proj');
   const task = document.getElementById('task');
   const [selButton, setSelButton] = useState(null);
-  const [isClicked, setIsClicked] = useState(null);
+  const [isClicked, setIsClicked] = useState(1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -462,20 +470,20 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       </div>
       <div style={{"display":"flex", "height":"100%"}}>
       <div className='side'>
-          <div className='side-elem' style={{paddingLeft:'5px', backgroundColor: isClicked === 1 ? '#D8D8D8':''}} onClick={showProj}>Create Project</div>
-          <div className='side-elem' style={{paddingLeft:'5px', backgroundColor: isClicked === 2 ? '#D8D8D8':''}}  onClick={showTask}>Create Task</div>
+          <div className='side-elem' style={{paddingLeft:'8px', backgroundColor: isClicked === 1 ? '#D8D8D8':'', textAlign:'center'}} onClick={showProj}>Create Project</div>
+          <div className='side-elem' style={{paddingLeft:'8px', backgroundColor: isClicked === 2 ? '#D8D8D8':'', textAlign:'center'}}  onClick={showTask}>Create Task</div>
         </div>
 
       <div id="proj" >
         <form className='createForm' onSubmit={addProj}>
         <label>Project Name*</label><br></br>
-        <input type='text' id="projName" value={formData.projName} onChange={handleChange} name="projName" placeholder='Enter Project Name'></input><br></br>
+        <input type='text' id="projName" value={formData.projName} maxLength={40} onChange={handleChange} name="projName" placeholder='Enter Project Name'></input><br></br>
         <div id="titleError" className='error'>*please enter a project name</div>
         <div id="titleExists" className='error'>*project already exists</div>
-        <label style={{marginTop:'10px'}}>Project Description</label><br></br>
+        {/* <label style={{marginTop:'10px'}}>Project Description</label><br></br>
         <input type='text'  name="projDescription"
             value={formData.projDescription}
-            onChange={handleChange}></input><br></br>
+            onChange={handleChange}></input><br></br> */}
         <button className='create' type="submit" value="Create"><span className='createText'>Create</span></button>
         </form>
       </div>
@@ -485,7 +493,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         <input type='text' id="taskName" name="taskName"  onChange={handleChangeTask} placeholder='Enter Task Name'></input><br></br>
         <div id="taskTitleError" className='error'>*please enter a task name</div>
         <label>Description:</label><br></br>
-        <textarea name='taskDesc' onChange={handleChangeTask} placeholder='Enter Description'></textarea> <br></br>
+        <textarea maxLength={100} name='taskDesc' onChange={handleChangeTask} placeholder='Enter Description'></textarea> <br></br>
         <label for="chooseProj">Choose Project:</label><br></br>
         <select name="taskProj" id="chooseProj" onChange={handleChangeTask}>
           <option value={"None"} >None</option>

@@ -17,6 +17,14 @@
   border-radius: 8px;
   margin-bottom: 10px;
   padding-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.side-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 10px;
 }
 
 .side-elem:hover {
@@ -101,8 +109,8 @@
 
 .banner {
   width: 100%;
+  height: 4.5vh;
   border-bottom: 1px solid black;
-  height:10%;
   margin-bottom: 10px;
 }
 
@@ -154,6 +162,7 @@
   border-radius: 3px;
   font-size: 15px;
   margin: 10px;
+  margin-left: 0px;
   transition: background-color 0.4s;
 }
 
@@ -254,6 +263,8 @@ label {
   }
 
   .details {
+    display: flex;
+    flex-direction: column;
     width: 500px;
     height: 300px;
     background-color: white;
@@ -287,20 +298,24 @@ label {
   }
 
   .dropdown {
-    right: 10%;
-    
+    right: 12%;
     position:fixed;
     background-color: white;
-    padding-right: 30px;
-    padding-left: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
     text-align: center;
     display: none;
     box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6); ;
   }
 
-  .dropdown:hover {
+  .dropdown-elem {
+    width: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+  }
+
+  .dropdown-elem:hover {
     background-color: rgba(235, 233, 233);
   }
 
