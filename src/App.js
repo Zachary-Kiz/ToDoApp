@@ -351,7 +351,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
 
   function addProj(e) {
     e.preventDefault();
-    if (formData.projName !== "") {
+    if (formData.projName !== "" && !projects.some(proj => proj.name === formData.projName)) {
       const projEntry = {
         name: formData.projName,
         description: formData.projDescription,
@@ -362,9 +362,14 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       
       create.style['display'] = 'none';
       document.getElementById("titleError").style['display'] = 'none';
+      document.getElementById('titleExists').style['display'] = 'none';
       e.target.reset();
+    } else if ( projects.some(proj => proj.name === formData.projName)) {
+      document.getElementById('titleExists').style['display'] = 'block';
+      document.getElementById("titleError").style['display'] = 'none';
     } else {
       document.getElementById("titleError").style['display'] = 'block';
+      document.getElementById('titleExists').style['display'] = 'none';
     }
   }
 
@@ -436,6 +441,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         <label>Project Name*</label><br></br>
         <input type='text' id="projName" value={formData.projName} onChange={handleChange} name="projName" placeholder='Enter Project Name'></input><br></br>
         <div id="titleError" className='error'>*please enter a project name</div>
+        <div id="titleExists" className='error'>*project already exists</div>
         <label style={{marginTop:'10px'}}>Project Description</label><br></br>
         <input type='text'  name="projDescription"
             value={formData.projDescription}

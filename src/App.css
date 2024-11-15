@@ -52,7 +52,7 @@
 
 .create-task {
   height: 60%;
-  width: 40%;
+  width: 30%;
   min-width: 600px;
   min-height: 600px;
   top: 0;
@@ -141,7 +141,7 @@
   padding-right: 20px;
   margin-right: 10px;
   height: 79%;
-  width:15%
+  width:20%
 }
 
 .createForm {
@@ -231,7 +231,7 @@ label {
   }
 
   input[type="checkbox"]:checked {
-    background-color: blue !important;
+    accent-color: #0083ff !important;
     color: white;
   }
 
@@ -250,7 +250,7 @@ label {
 
   .prioLevel {
     margin-right: 7px;
-    color:rgb(86, 86, 219);
+    color:#0083ff;
   }
 
   .details {
@@ -269,4 +269,5 @@ label {
     display: none;
     z-index: 10; /* Higher z-index */
     order: -1;
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6);
   }
