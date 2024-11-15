@@ -111,6 +111,7 @@ function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setC
 function Task({ task,num, setTasks, setIsBlurred }) {
 
   const [completed, setCompleted] = useState(false);
+  console.log(task);
 
   function addStrike(id) {
     let elem = document.getElementById(id);
@@ -123,9 +124,10 @@ function Task({ task,num, setTasks, setIsBlurred }) {
   }
 
   function deleteTask(){
-    let taskId = task.id;
-    document.getElementById('task' + taskId).style['display'] = 'none';
+    const taskId = task.id;
     setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    //document.getElementById('task' + taskId).style['display'] = 'none';
+    
   }
 
   function showDetails() {
@@ -140,7 +142,7 @@ function Task({ task,num, setTasks, setIsBlurred }) {
   }
 
   //num = num.toString();
-  let id = 'taskText' + num;
+  const id = 'taskText' + num;
   let priorityLabel = '!'; // Default to Low
 
   // Check priority and assign the correct label
@@ -366,6 +368,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
   const task = document.getElementById('task');
   const [selButton, setSelButton] = useState(null);
   const [isClicked, setIsClicked] = useState(1);
+  const [taskLength, setTaskLength] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -424,7 +427,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
     }
     if (formTask.taskName !== "" && formTask.taskPrio !== "" && formTask.taskDue !== "") {
       const taskEntry = {
-        id: tasks.length,
+        id: taskLength,
         name: formTask.taskName,
         description: formTask.taskDesc,
         project: formTask.taskProj,
@@ -435,6 +438,7 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
       setIsBlurred(false);
       setFormTask({taskId:'', taskName: '', taskDesc: '', taskProj:'', taskPrio: '', taskDue:''});
       setSelButton(null);
+      setTaskLength(taskLength + 1);
 
       create.style['display'] = 'none';
       document.getElementById("taskTitleError").style['display'] = 'none';
