@@ -23,7 +23,21 @@ export default function ToDoPage() {
     }
   });
   const [currentProj, setCurrentProj] = useState("Home");
-  const [currentTasks, setCurrentTasks] = useState([])
+  const [currentTasks, setCurrentTasks] = useState([]);
+
+  document.addEventListener(
+    'click',
+    function handleClickOutsideBox(event) {
+      const box = document.getElementById('dropdown');
+      const drop = document.getElementById('dots');
+  
+      if (!drop.contains(event.target)) {
+        box.style.display = 'none';
+      } else {
+        box.style.display = 'block';
+      }
+    },
+  );
 
   
 
@@ -50,7 +64,7 @@ export default function ToDoPage() {
     <>
   <div id="body" className={isBlurred ? 'blur' : ''} onClick={unBlur}>
   <Sidebar tasks={tasks} setCurrentTasks={setCurrentTasks} setCurrentProj={setCurrentProj} setIsBlurred={setIsBlurred} projects={projects}/>
-  <ProjPage currentProj={currentProj} tasks={currentTasks} setTasks={setTasks} setIsBlurred={setIsBlurred}></ProjPage>
+  <ProjPage currentProj={currentProj} tasks={currentTasks} setTasks={setTasks} setIsBlurred={setIsBlurred} setProjects={setProjects} setCurrentProj={setCurrentProj}></ProjPage>
   </div>
   <div id="popups">
   <CreateTask tasks={tasks} setTasks={setTasks} projects={projects} setProjects={setProjects} setIsBlurred={setIsBlurred} currentProj={currentProj}/>
@@ -60,11 +74,25 @@ export default function ToDoPage() {
 );
 }
 
-function ProjPage({currentProj, tasks, setTasks, setIsBlurred}) {
+function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setCurrentProj}) {
+
+  function delProj() {
+    setTasks(prevTasks => prevTasks.filter(task => task.project !== currentProj));
+    setProjects(prevProjs => prevProjs.filter(proj => proj.name !== currentProj));
+    setCurrentProj("Home");
+  }
+
+  const dontChange = ["Home", "Today", "Week"];
   
   return (
     <div className='projPage'>
-      <h1 className='header'>{currentProj}</h1>
+      <div  className='header'>
+        <h1 style={{display:'inline-block'}}>{currentProj}</h1>
+        <div id='dots'  className='dots' style={{display: !dontChange.includes(currentProj) ? 'inline-block' : 'none'}}></div>
+      </div>
+      <div id='dropdown' className='dropdown'>
+        <div onClick={delProj}>Delete Project</div>
+      </div>
       {tasks.map((task, index) => (
         <Task key={index} task={task} num={index} setTasks={setTasks} setIsBlurred={setIsBlurred}/>
       ))}
@@ -178,6 +206,8 @@ function ShowDetails({setIsBlurred}) {
 function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}) {
   
   const [isClicked, setIsClicked] = useState(0);
+
+  useEffect(() => {setIsClicked(0)}, [projects.length])
 
   function onAddProj() {
     setIsBlurred(true);

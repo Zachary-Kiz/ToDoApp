@@ -202,8 +202,8 @@
   border-bottom:1px solid black !important;
   margin-top:5% !important;
   width: 90% !important;
-  padding-bottom: 10px;
   margin-bottom: 0px;
+  display: inline-block;
 }
 
 .strike {
@@ -271,3 +271,44 @@ label {
     order: -1;
     box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6);
   }
+
+  .dots::after {
+    content: '\2807';
+    font-size: 30px;
+    border-radius: 100%;
+    text-align: center;
+  }
+
+  .dots {
+    display: inline-block;
+    position: fixed;
+    right:11%;
+    
+  }
+
+  .dropdown {
+    right: 10%;
+    
+    position:fixed;
+    background-color: white;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    display: none;
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6); ;
+  }
+
+  .dropdown:hover {
+    background-color: rgba(235, 233, 233);
+  }
+
+  ul {
+    list-style-type: none;
+}
+
+h1 {
+  margin-top: 0px;
+  margin-bottom: 4px;
+}
