@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import plus from './assets/plus.svg';
 import trash from './assets/trash-svgrepo-com.svg'
+import upArrow from './assets/up-arrow-svgrepo-com.svg'
+import downArrow from './assets/down-arrow-svgrepo-com.svg'
 import './App.css';
 import { useEffect, useState } from 'react';
 
@@ -67,7 +69,7 @@ export default function ToDoPage() {
   <ProjPage currentProj={currentProj} tasks={currentTasks} setTasks={setTasks} setIsBlurred={setIsBlurred} setProjects={setProjects} setCurrentProj={setCurrentProj}></ProjPage>
   </div>
   <div id="popups">
-  <CreateTask tasks={tasks} setTasks={setTasks} projects={projects} setProjects={setProjects} setIsBlurred={setIsBlurred} currentProj={currentProj}/>
+  <CreateTask setTasks={setTasks} projects={projects} setProjects={setProjects} setIsBlurred={setIsBlurred}/>
   <ShowDetails setIsBlurred={setIsBlurred}/>
   </div>
   </>
@@ -76,6 +78,8 @@ export default function ToDoPage() {
 
 function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setCurrentProj}) {
 
+  const [sortDateBool, setSortDateBool] = useState(false);
+
   function delProj() {
     setTasks(prevTasks => prevTasks.filter(task => task.project !== currentProj));
     setProjects(prevProjs => prevProjs.filter(proj => proj.name !== currentProj));
@@ -83,10 +87,17 @@ function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setC
   }
 
   function sortDate() {
-    console.log(tasks);
-    let sortedTasks = tasks.sort((a, b) => Date.parse(new Date(b.dueDate)) - Date.parse(new Date(a.dueDate)));
-    //setTasks(sortedTasks);
-    console.log(sortedTasks);
+    let sortedTasks;
+    if (!sortDateBool) {
+      sortedTasks = tasks.sort((a, b) => Date.parse(new Date(b.dueDate)) - Date.parse(new Date(a.dueDate)));
+      setTasks(sortedTasks);
+      setSortDateBool(true);
+    } else {
+      sortedTasks = tasks.sort((a, b) => Date.parse(new Date(a.dueDate)) - Date.parse(new Date(b.dueDate)));
+      setTasks(sortedTasks);
+      setSortDateBool(false);
+    }
+    window.localStorage.setItem('tasks', JSON.stringify(sortedTasks));
   }
 
   const dontChange = ["Home", "Today", "Week"];
@@ -95,32 +106,36 @@ function ProjPage({currentProj, tasks, setTasks, setIsBlurred, setProjects, setC
     <div className='projPage'>
       <div  className='header'>
         <h1 style={{display:'inline-block'}}>{currentProj}</h1>
-        <div id='dots'  className='dots' style={{display: !dontChange.includes(currentProj) ? 'inline-block' : 'none'}}></div>
+        <div id='dots'  className='dots' ></div>
       </div>
       <div id='dropdown' className='dropdown'>
-        <div className='dropdown-elem' onClick={delProj}>Delete Project</div>
-        <div className='dropdown-elem' onClick={sortDate}>Sort By Date</div>
+        <div className='dropdown-elem' style={{display: !dontChange.includes(currentProj) ? 'inline-block' : 'none'}} onClick={delProj}>Delete Project <img  style={{width:'20px',float:'right'}} src={trash}></img></div>
+        <div className='dropdown-elem' onClick={sortDate}>Sort By Date <img style={{width:'20px',float:'right'}} src={sortDateBool ? upArrow : downArrow}></img></div>
       </div>
       {tasks.map((task, index) => (
-        <Task key={index} task={task} num={index} setTasks={setTasks} setIsBlurred={setIsBlurred}/>
+        <Task key={task.id} task={task} num={index} setTasks={setTasks} setIsBlurred={setIsBlurred} tasks={tasks}/>
       ))}
     </div>
   )
 }
 
-function Task({ task,num, setTasks, setIsBlurred }) {
+function Task({ task,num, setTasks, setIsBlurred}) {
 
-  const [completed, setCompleted] = useState(false);
-  console.log(task);
+  const [completed, setCompleted] = useState(task.completed);
+  
 
-  function addStrike(id) {
-    let elem = document.getElementById(id);
-    elem.classList.toggle('strike');
-    if (elem.classList.contains('strike')) {
-      setCompleted(true);
-    } else {
-      setCompleted(false);
-    }
+  function addStrike() {
+    setCompleted(prevCompleted => {
+      const newCompleted = !prevCompleted;
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(findTask =>
+          findTask.id === task.id ? { ...findTask, completed: newCompleted } : findTask
+        );
+        window.localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save to localStorage
+        return updatedTasks; // Return the updated array to update the state
+      });
+      return newCompleted; // Return the updated completed state
+    });
   }
 
   function deleteTask(){
@@ -162,12 +177,14 @@ function Task({ task,num, setTasks, setIsBlurred }) {
     day = "0" + day;
   }
   let today = year + "-" + month + "-" + day;
+  useEffect(() => {setCompleted(task.completed)}, [task.completed])
+
 
   return (<>
     <div id={"task" + task.id}  className='task'>
       <div style={{ display: 'flex', alignItems: 'center', maxWidth:'calc(100% - 260px)' }}>
-        <input className='task-stuff' style={{accentColor:'rgb(9, 38, 187)', marginLeft:'10px'}} type='checkbox' onClick={() => addStrike(id)}/>
-        <div id={id} className='task-stuff' style={{
+        <input checked={completed} className='task-stuff' style={{accentColor:'rgb(9, 38, 187)', marginLeft:'10px'}} type='checkbox' onChange={() => addStrike(id)}/>
+        <div id={id} className={completed ? 'strike task-stuff' : 'task-stuff'} style={{
           marginLeft: '10px',
           flexGrow: 1, // This ensures task name takes up remaining space
           overflowX: 'hidden', // Prevents overflow if task name is too long
@@ -224,16 +241,16 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
     const create = document.querySelector('.create-task');
     create.style['display'] = 'block';
 
-    // setProjects([...projects, 'project']);
   }
 
 
-  function getProj(projName, num, check) {
+  function getProj(projName, num) {
     
     setCurrentProj(projName);
     setIsClicked(num);
     setCurrentTasks([]);
     let curTasks = [];
+    tasks = tasks.filter(task => !task.completed);
     if (projName == "Home") {
       curTasks = tasks;
     }
@@ -272,7 +289,6 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
       
       for (let i = 0; i < tasks.length; i++) {
         let curDate = new Date(tasks[i].dueDate);
-        console.log(date2);
         if (date1 <= curDate && date2 >= curDate) {
           curTasks.push(tasks[i]);
         }
@@ -339,10 +355,10 @@ function Sidebar({tasks, setCurrentTasks,setCurrentProj, setIsBlurred, projects}
 }
 
 function SideElem({ value , getProj, index, isClicked, tasks}) {
-  useEffect(() => {if (isClicked == index ) {getProj(value,index, false )}}, [tasks.length])
+  useEffect(() => {if (isClicked == index ) {getProj(value,index)}}, [tasks.length])
   
   return (
-    <div style={{backgroundColor: isClicked === index ? '#D8D8D8':''}} className='side-elem' onClick={() => getProj(value, index, true)}>
+    <div style={{backgroundColor: isClicked === index ? '#D8D8D8':''}} className='side-elem' onClick={() => getProj(value, index)}>
       <div className='side-text'>{value}</div>
     </div>
   );
@@ -359,10 +375,10 @@ function AddList({ onClick }) { // Receive the onClick prop
   );
 }
 
-function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, currentProj}) {
+function CreateTask({ setTasks, projects, setProjects, setIsBlurred}) {
 
   const [formData, setFormData] = useState({ projName: '', projDescription: '' , projTasks: []});
-  const [formTask, setFormTask] = useState({taskName: '', taskDesc: '', taskPrio: '', taskDue:'', taskProj:''})
+  const [formTask, setFormTask] = useState({taskName: '', taskDesc: '', taskPrio: '', taskDue:'', taskProj:'', completed:false})
   const create = document.querySelector('.create-task');
   const proj = document.getElementById('proj');
   const task = document.getElementById('task');
@@ -432,19 +448,19 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         description: formTask.taskDesc,
         project: formTask.taskProj,
         priority: formTask.taskPrio,
-        dueDate: formTask.taskDue
+        dueDate: formTask.taskDue,
+        completed: false
       }
       setTasks((prevTasks) => [...prevTasks, taskEntry])
       setIsBlurred(false);
-      setFormTask({taskId:'', taskName: '', taskDesc: '', taskProj:'', taskPrio: '', taskDue:''});
+      setFormTask({taskId:'', taskName: '', taskDesc: '', taskProj:'', taskPrio: '', taskDue:'', completed:false});
       setSelButton(null);
-      setTaskLength(taskLength + 1);
+      setTaskLength(prev => prev + 1);
 
       create.style['display'] = 'none';
       document.getElementById("taskTitleError").style['display'] = 'none';
       document.getElementById("taskPrioError").style['display'] = 'none';
       document.getElementById("taskDateError").style['display'] = 'none';
-      console.log(formTask)
       e.target.reset();
     } 
   }
@@ -484,10 +500,6 @@ function CreateTask({tasks, setTasks, projects, setProjects, setIsBlurred, curre
         <input type='text' id="projName" value={formData.projName} maxLength={40} onChange={handleChange} name="projName" placeholder='Enter Project Name'></input><br></br>
         <div id="titleError" className='error'>*please enter a project name</div>
         <div id="titleExists" className='error'>*project already exists</div>
-        {/* <label style={{marginTop:'10px'}}>Project Description</label><br></br>
-        <input type='text'  name="projDescription"
-            value={formData.projDescription}
-            onChange={handleChange}></input><br></br> */}
         <button className='create' type="submit" value="Create"><span className='createText'>Create</span></button>
         </form>
       </div>
